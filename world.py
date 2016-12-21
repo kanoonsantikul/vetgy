@@ -1,4 +1,4 @@
-from models import Noodle, Vetgy
+from models import Vetgy, Mouth, Model, ModelSprite
 from random import randint, random
 import setting
 
@@ -7,25 +7,48 @@ class World:
         self.width = width
         self.height = height
 
-        self.noodle = Noodle(
+        self.noodle = Model(
                 self,
                 setting.SCREEN_WIDTH / 2,
-                setting.SCREEN_HEIGHT / 2)
+                setting.SCREEN_HEIGHT / 2 - 85,
+                'images/noodle.png', 0)
+
+        self.upper_mouth = Model(
+                self,
+                setting.SCREEN_WIDTH / 2,
+                setting.SCREEN_HEIGHT,
+                'images/upper-mouth.png', 0)
+        self.upper_mouth.y -= self.upper_mouth.sprite.texture.height / 2
+        self.lower_mouth = Mouth(
+                self,
+                setting.SCREEN_WIDTH / 2,
+                Mouth.MAX_Y)
 
         self.vetgies = []
         self.sum_delta = 0
 
     def draw(self):
+        self.upper_mouth.sprite.draw()
+        self.lower_mouth.sprite.draw()
+
         self.noodle.sprite.draw()
+
         for vetgy in self.vetgies:
             vetgy.sprite.draw()
 
     def animate(self, delta):
         self.sum_delta += delta
 
+        self.lower_mouth.animate(delta)
+        self.noodle.y = self.lower_mouth.y - self.noodle.sprite.texture.height / 2 + 110
+
         if self.sum_delta >= 1:
-            vetgy = Vetgy(self,
-                    randint(0, setting.SCREEN_WIDTH),
+            noodle_width = (int)(self.noodle.sprite.texture.width / 2)
+            vetgy = Vetgy(
+                    self,
+                    randint(
+                            setting.SCREEN_WIDTH / 2 - noodle_width,
+                            setting.SCREEN_WIDTH / 2 + noodle_width),
                     -20)
             self.vetgies.append(vetgy)
 
