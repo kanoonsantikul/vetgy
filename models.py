@@ -44,7 +44,7 @@ class Vetgy(Model):
 
 class Mouth(Model):
     MAX_Y = 570
-    MIN_Y = 470
+    MIN_Y = 400
     SPEED = 2
 
     def __init__(self, world, x, y):

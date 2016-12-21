@@ -18,7 +18,7 @@ class World:
                 setting.SCREEN_WIDTH / 2,
                 setting.SCREEN_HEIGHT,
                 'images/upper-mouth.png', 0)
-        self.upper_mouth.y -= self.upper_mouth.sprite.texture.height / 2
+        self.upper_mouth.y -= self.upper_mouth.height / 2
         self.lower_mouth = Mouth(
                 self,
                 setting.SCREEN_WIDTH / 2,
@@ -40,10 +40,10 @@ class World:
         self.sum_delta += delta
 
         self.lower_mouth.animate(delta)
-        self.noodle.y = self.lower_mouth.y - self.noodle.sprite.texture.height / 2 + 110
+        self.noodle.y = self.lower_mouth.y - self.noodle.height / 2 + 110
 
         if self.sum_delta >= 1:
-            noodle_width = (int)(self.noodle.sprite.texture.width / 2)
+            noodle_width = (int)(self.noodle.width / 2)
             vetgy = Vetgy(
                     self,
                     randint(
@@ -56,3 +56,6 @@ class World:
 
         for vetgy in self.vetgies:
             vetgy.animate(delta)
+            if (vetgy.y - vetgy.height / 2 >= self.lower_mouth.y + self.lower_mouth.height / 2
+                    and vetgy.y + vetgy.height / 2 <= Mouth.MAX_Y + self.lower_mouth.height / 2):
+                self.vetgies.remove(vetgy)
