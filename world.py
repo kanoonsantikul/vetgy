@@ -13,11 +13,7 @@ class World:
                 setting.SCREEN_HEIGHT / 2)
 
         self.vetgies = []
-        for i in range(5):
-            vetgy = Vetgy(self,
-                    randint(0, setting.SCREEN_WIDTH),
-                    -20)
-            self.vetgies.append(vetgy)
+        self.sum_delta = 0
 
     def draw(self):
         self.noodle.sprite.draw()
@@ -25,5 +21,15 @@ class World:
             vetgy.sprite.draw()
 
     def animate(self, delta):
+        self.sum_delta += delta
+
+        if self.sum_delta >= 1:
+            vetgy = Vetgy(self,
+                    randint(0, setting.SCREEN_WIDTH),
+                    -20)
+            self.vetgies.append(vetgy)
+
+            self.sum_delta = 0
+
         for vetgy in self.vetgies:
             vetgy.animate(delta)
