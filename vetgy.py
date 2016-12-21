@@ -1,7 +1,6 @@
 import arcade
 
 from world import World
-import setting
 
 SCREEN_WIDTH = 500
 SCREEN_HEIGHT = 700
@@ -12,7 +11,6 @@ class MainWindow(arcade.Window):
 
         arcade.set_background_color(arcade.color.WHITE)
 
-        setting.init()
         self.world = World(width, height)
 
     def on_draw(self):

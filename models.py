@@ -43,8 +43,8 @@ class Vetgy(Model):
         self.y += Vetgy.SPEED
 
 class Mouth(Model):
-    MAX_Y = 570
-    MIN_Y = 400
+    MAX_Y = 550
+    MIN_Y = 450
     SPEED = 2
 
     def __init__(self, world, x, y):
