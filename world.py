@@ -1,6 +1,7 @@
+import arcade.key
 import arcade
 from models import Vetgy, Mouth, Model, ModelSprite
-from random import randint, random
+from random import randint, random, uniform
 
 class World:
     def __init__(self, width, height):
@@ -25,6 +26,7 @@ class World:
                 Mouth.MAX_Y)
 
         self.vetgies = []
+        self.selection = 0
         self.sum_delta = 0
         self.score = 0
 
@@ -37,18 +39,12 @@ class World:
         for vetgy in self.vetgies:
             vetgy.sprite.draw()
 
-        arcade.draw_text(str(self.score),
-                self.width - 60,
-                30,
-                arcade.color.BLACK, 20)
-
     def animate(self, delta):
-        self.sum_delta += delta
-
         self.lower_mouth.animate(delta)
         self.noodle.y = self.lower_mouth.y - self.noodle.height / 2 + 110
 
-        if self.sum_delta >= 1:
+        self.sum_delta += delta
+        if self.sum_delta >= uniform(1.4, 1.8):
             noodle_width = (int)(self.noodle.width / 2)
             vetgy = Vetgy(
                     self,
@@ -64,9 +60,46 @@ class World:
             vetgy.animate(delta)
 
             if (vetgy.y - vetgy.height / 2 >= self.lower_mouth.y + self.lower_mouth.height / 2 - 15
-                    and vetgy.y + vetgy.height / 2 <= Mouth.MAX_Y + self.lower_mouth.height / 2):
+                    and vetgy.y + vetgy.height / 2 - 15 <= Mouth.MAX_Y + self.lower_mouth.height / 2):
                 self.vetgies.remove(vetgy)
+                if self.selection != 0:
+                    self.selection -= 1
+                vetgy.sprite.kill()
                 self.score += 1
 
             if vetgy.y - vetgy.height / 2 >= self.height:
                 self.vetgies.remove(vetgy)
+                if self.selection != 0:
+                    self.selection -= 1
+                vetgy.sprite.kill()
+
+        if len(self.vetgies) > self.selection:
+            self.vetgies[self.selection].select()
+
+    def on_key_press(self, key, key_modifiers):
+            if key == arcade.key.UP:
+                if len(self.vetgies) > self.selection:
+                    self.vetgies[self.selection].turbo()
+
+            if key == arcade.key.DOWN:
+                if len(self.vetgies) > self.selection:
+                    self.vetgies[self.selection].slow()
+
+            if key == arcade.key.LEFT:
+                if (len(self.vetgies) > self.selection - 1
+                        and self.selection - 1 >= 0):
+                    self.vetgies[self.selection].deselect()
+                    self.selection -= 1
+                    self.vetgies[self.selection].select()
+
+            if key == arcade.key.RIGHT:
+                if (len(self.vetgies) > self.selection + 1
+                        and self.selection + 1 < len(self.vetgies)):
+                    self.vetgies[self.selection].deselect()
+                    self.selection += 1
+                    self.vetgies[self.selection].select()
+
+    def on_key_release(self, key, key_modifiers):
+            if key == arcade.key.UP or key == arcade.key.DOWN:
+                if len(self.vetgies) > self.selection:
+                    self.vetgies[self.selection].speed = Vetgy.SPEED

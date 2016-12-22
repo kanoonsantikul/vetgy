@@ -18,8 +18,19 @@ class MainWindow(arcade.Window):
 
         self.world.draw()
 
+        arcade.draw_text(str(self.world.score),
+                self.world.width - 60,
+                30,
+                arcade.color.BLACK, 20)
+
     def animate(self ,delta):
         self.world.animate(delta)
+
+    def on_key_press(self, key, key_modifiers):
+        self.world.on_key_press(key, key_modifiers)
+
+    def on_key_release(self, key, key_modifiers):
+        self.world.on_key_release(key, key_modifiers)
 
 if __name__ == '__main__':
     window = MainWindow(SCREEN_WIDTH, SCREEN_HEIGHT)
