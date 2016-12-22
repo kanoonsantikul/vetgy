@@ -25,12 +25,20 @@ class World:
                 self.width / 2,
                 Mouth.MAX_Y)
 
+        self.lives = []
+        y = 30
+        for live in range(3):
+            live = Model(self, 30, y, 'images/live.png', 0)
+            y += 50
+            self.lives.append(live)
+
         self.vetgies = []
         self.selection = 0
         self.sum_delta = 0
         self.score = 0
+        self.is_gameover = False
 
-    def draw(self):
+    def draw_game(self):
         self.upper_mouth.sprite.draw()
         self.lower_mouth.sprite.draw()
 
@@ -38,6 +46,26 @@ class World:
 
         for vetgy in self.vetgies:
             vetgy.sprite.draw()
+
+        for live in self.lives:
+            live.sprite.draw()
+
+        arcade.draw_text(str(self.score),
+                self.width - 60,
+                30,
+                arcade.color.BLACK, 20)
+
+    def draw_gameover(self):
+        arcade.draw_text("GAME OVER",
+                20,
+                self.height / 2,
+                arcade.color.BLACK, 20)
+
+    def draw(self):
+        if self.is_gameover:
+            self.draw_gameover()
+        else:
+            self.draw_game()
 
     def animate(self, delta):
         self.lower_mouth.animate(delta)
@@ -73,8 +101,15 @@ class World:
                     self.selection -= 1
                 vetgy.sprite.kill()
 
+                if len(self.lives) > 0:
+                    live = self.lives.pop()
+                    live.sprite.kill()
+
         if len(self.vetgies) > self.selection:
             self.vetgies[self.selection].select()
+
+        if len(self.lives) <= 0:
+            self.is_gameover = True
 
     def on_key_press(self, key, key_modifiers):
             if key == arcade.key.UP:

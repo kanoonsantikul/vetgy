@@ -18,11 +18,6 @@ class MainWindow(arcade.Window):
 
         self.world.draw()
 
-        arcade.draw_text(str(self.world.score),
-                self.world.width - 60,
-                30,
-                arcade.color.BLACK, 20)
-
     def animate(self ,delta):
         self.world.animate(delta)
 

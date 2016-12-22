@@ -1,5 +1,5 @@
 import arcade.key
-
+import arcade
 from random import randint, random
 
 class ModelSprite(arcade.Sprite):
